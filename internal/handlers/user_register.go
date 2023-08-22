@@ -2,9 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"pkg/db/go/internal/models"
 )
@@ -14,31 +14,34 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	body, err := ioutil.ReadAll(r.Body)
+func (h Handler) Register(c *gin.Context) {
+	var user models.UserModel
+
+	body, err := ioutil.ReadAll(c.Request.Body)
 
 	if err != nil {
-		log.Fatalln(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read request body"})
+		return
 	}
 
-	var user models.UserModel
-	json.Unmarshal(body, &user)
+	// Unmarshal JSON data into user struct
+	if err := json.Unmarshal(body, &user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format"})
+		return
+	}
 
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
-		http.Error(w, "Error hashing password", http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password"})
 		return
 	}
 	user.Password = hashedPassword
 
 	result := h.DB.Create(&user)
 	if result.Error != nil {
-		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode("Created")
+	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }

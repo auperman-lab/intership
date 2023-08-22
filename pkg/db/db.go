@@ -7,8 +7,6 @@ import (
 	"pkg/db/go/internal/models"
 )
 
-var DB *gorm.DB
-
 func Init() *gorm.DB {
 	dbURL := "postgres://pg:pass@localhost:5432/crud"
 
