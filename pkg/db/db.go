@@ -1,22 +1,29 @@
 package db
 
 import (
+	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
-	"pkg/db/go/internal/models"
+)
+
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "danu"
+	password = "macrii"
+	dbname   = "postgres"
 )
 
 func Init() *gorm.DB {
-	dbURL := "postgres://pg:pass@localhost:5432/crud"
+	fmt.Println("Connecting to database...")
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
-	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
-
+	DB, err := gorm.Open(postgres.Open(psqlconn), &gorm.Config{})
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("failed gorm connection: %v\n", err)
 	}
 
-	db.AutoMigrate(&models.UserModel{})
+	return DB
 
-	return db
 }

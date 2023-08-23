@@ -2,15 +2,18 @@ version: '3.8'
 
 services:
   db:
+    container_name: postgres_db
     image: postgres:15.4-alpine
     restart:
       always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      - POSTGRES_USER=danu
-      - POSTGRES_PASSWORD=macrii
-      - POSTGRES_DB=default_database
+      POSTGRES_USER: danu
+      POSTGRES_PASSWORD: macrii
     volumes:
       - ./db-data/:/var/lib/postgresql/data/
 
+volumes:
+  postgres-db:
+    driver: local
