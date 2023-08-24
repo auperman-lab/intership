@@ -21,7 +21,7 @@ func (repo *UserRepository) Insert(user *models.UserModel) error {
 		Model(models.UserModel{}).
 		Create(user).Error
 	if err != nil {
-		log.Printf("failed to insest user in database: %v\n", err)
+		log.Printf("failed to insert user in database: %v\n", err)
 		return err
 	}
 
@@ -29,19 +29,19 @@ func (repo *UserRepository) Insert(user *models.UserModel) error {
 }
 
 func (repo *UserRepository) Delete(user *models.UserModel) error {
-	err := repo.dbClient.Debug().Where("id = ?", user.ID).Delete(&models.UserModel{}).Error
+	err := repo.dbClient.Debug().Unscoped().Where("id = ?", user.ID).Delete(user).Error
 
 	if err != nil {
-		log.Print("failed to delete from db")
+		log.Print("failed to delete from postgres")
 		return err
 	}
-
 	return nil
+
 }
 
 func (repo *UserRepository) CheckUserExists(userName string) (string, error) {
 	var user models.UserModel
-	result := repo.dbClient.Debug().Where("name= ?", userName).First(&user.Name)
+	result := repo.dbClient.Debug().Where("email= ?", userName).First(&user)
 
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {

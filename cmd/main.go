@@ -1,12 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
-	"net/http"
-	"os"
 	"pkg/db/go/internal/controller"
 	"pkg/db/go/internal/models"
 	"pkg/db/go/internal/repository"
@@ -18,29 +15,18 @@ var DB *gorm.DB
 
 func main() {
 	r := gin.Default()
-	r.Use(gin.Recovery())
-	fmt.Printf("POSTGRES_HOST: %s\n", os.Getenv("POSTGRES_HOST"))
+	//r.Use(gin.Recovery())
 
 	userRepo := repository.NewUserRepository(DB)
 	userService := service.NewUserService(userRepo)
 	userController := controller.NewUserController(userService)
 
-	userRouter := r.Group("/user")
-	{
-		userRouter.POST("/register", userController.Register)
-		userRouter.POST("/login", userController.Login)
-		userRouter.DELETE("/delete", userController.Delete)
-		r.POST("/get", func(c *gin.Context) {
+	r.POST("/register", userController.Register)
+	r.POST("/login", userController.Login)
+	r.DELETE("/delete", userController.Delete)
+	r.GET("/validate", userController.Validate)
 
-			var users []models.UserModel
-			DB.Find(&users)
-
-			c.JSON(http.StatusOK, gin.H{"data": users})
-		})
-
-	}
-
-	_ = r.Run(":8888")
+	_ = r.Run(":8080")
 
 }
 
