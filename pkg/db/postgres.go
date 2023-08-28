@@ -15,13 +15,16 @@ const (
 	dbname   = "postgres"
 )
 
+var DB *gorm.DB
+
 func Init() *gorm.DB {
+
 	fmt.Println("Connecting to database...")
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	DB, err := gorm.Open(postgres.Open(psqlconn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("failed gorm connection: %v\n", err)
+		log.Fatalf("failed postgres connection: %v\n", err)
 	}
 
 	return DB

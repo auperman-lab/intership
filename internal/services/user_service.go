@@ -1,15 +1,15 @@
 package service
 
 import (
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 	"pkg/db/go/internal/models"
 )
 
 type IUserRepository interface {
 	Insert(user *models.UserModel) error
 	Delete(user *models.UserModel) error
-	CheckUserExists(userEmail string) (string, error)
+	CheckUserExists(userEmail string) (string, uint, error)
 }
 
 type UserService struct {
@@ -26,7 +26,7 @@ func (svc *UserService) Register(user *models.UserModel) error {
 
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
-		log.Print("Error hashing password")
+		fmt.Println("Error hashing password")
 		return err
 	}
 	user.Password = hashedPassword
@@ -39,23 +39,23 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func (svc *UserService) Login(guest *models.UserModel) error {
+func (svc *UserService) Login(guest *models.UserModel) (uint, error) {
 
-	passFromDB, err := svc.userRepo.CheckUserExists(guest.Email)
+	passFromDB, idFromDB, err := svc.userRepo.CheckUserExists(guest.Email)
 
 	if err != nil {
-		log.Print("Invalit credentials")
-		return err
+		fmt.Println("Invalit credentials")
+		return 0, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(passFromDB), []byte(guest.Password))
 
 	if err != nil {
-		log.Print("Invalit credentials")
-		return err
+		fmt.Println("Invalit credentials")
+		return 0, err
 	}
 
-	return nil
+	return idFromDB, nil
 }
 
 func (svc *UserService) Delete(user *models.UserModel) error {

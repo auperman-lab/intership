@@ -39,16 +39,16 @@ func (repo *UserRepository) Delete(user *models.UserModel) error {
 
 }
 
-func (repo *UserRepository) CheckUserExists(userName string) (string, error) {
+func (repo *UserRepository) CheckUserExists(userName string) (string, uint, error) {
 	var user models.UserModel
 	result := repo.dbClient.Debug().Where("email= ?", userName).First(&user)
 
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			return "", nil
+			return "", 0, nil
 		}
-		return "", result.Error
+		return "", 0, result.Error
 	}
 
-	return user.Password, nil
+	return user.Password, user.ID, nil
 }
