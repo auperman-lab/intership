@@ -9,7 +9,8 @@ import (
 type IUserRepository interface {
 	Insert(user *models.UserModel) error
 	Delete(user *models.UserModel) error
-	CheckUserExists(userEmail string) (string, uint, error)
+	CheckUserEmail(userEmail string) (string, uint, error)
+	CheckUserId(userID uint) (models.UserModel, error)
 }
 
 type UserService struct {
@@ -41,7 +42,7 @@ func hashPassword(password string) (string, error) {
 
 func (svc *UserService) Login(guest *models.UserModel) (uint, error) {
 
-	passFromDB, idFromDB, err := svc.userRepo.CheckUserExists(guest.Email)
+	passFromDB, idFromDB, err := svc.userRepo.CheckUserEmail(guest.Email)
 
 	if err != nil {
 		fmt.Println("Invalit credentials")
@@ -61,4 +62,9 @@ func (svc *UserService) Login(guest *models.UserModel) (uint, error) {
 func (svc *UserService) Delete(user *models.UserModel) error {
 
 	return svc.userRepo.Delete(user)
+}
+
+func (svc *UserService) Get(ID uint) (models.UserModel, error) {
+
+	return svc.userRepo.CheckUserId(ID)
 }

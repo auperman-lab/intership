@@ -12,24 +12,25 @@ type IUserService interface {
 	Register(user *models.UserModel) error
 	Login(user *models.UserModel) (uint, error)
 	Delete(user *models.UserModel) error
+	Get(ID uint) (models.UserModel, error)
 }
 type ITokenService interface {
 	GenerateTokenPair(ID uint) (string, string, error)
 }
 
-type UserController struct {
+type UserControllerhttp struct {
 	userService  IUserService
 	tokenService ITokenService
 }
 
-func NewUserController(userService IUserService, tokenService ITokenService) *UserController {
-	return &UserController{
+func NewUserControllerhttp(userService IUserService, tokenService ITokenService) *UserControllerhttp {
+	return &UserControllerhttp{
 		userService:  userService,
 		tokenService: tokenService,
 	}
 }
 
-func (ctrl *UserController) Register(c *gin.Context) {
+func (ctrl *UserControllerhttp) Register(c *gin.Context) {
 	var user models.UserModel
 
 	if c.Bind(&user) != nil {
@@ -46,7 +47,7 @@ func (ctrl *UserController) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
 
-func (ctrl *UserController) Login(c *gin.Context) {
+func (ctrl *UserControllerhttp) Login(c *gin.Context) {
 
 	var guest models.UserModel
 
@@ -80,7 +81,7 @@ func (ctrl *UserController) Login(c *gin.Context) {
 
 }
 
-func (ctrl *UserController) Delete(c *gin.Context) {
+func (ctrl *UserControllerhttp) Delete(c *gin.Context) {
 	var user models.UserModel
 
 	if c.Bind(&user) != nil {
@@ -98,7 +99,25 @@ func (ctrl *UserController) Delete(c *gin.Context) {
 
 }
 
-func (ctrl *UserController) Refresh(c *gin.Context) {
+func (ctrl *UserControllerhttp) Get(c *gin.Context) {
+	var user models.UserModel
+
+	if c.Bind(&user) != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error reading body"})
+		return
+	}
+
+	userGet, err := ctrl.userService.Get(user.ID)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid id"})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": userGet})
+
+}
+
+func (ctrl *UserControllerhttp) Refresh(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "good"})
 

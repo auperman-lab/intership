@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package="./pb";
+
+import "user_msg.proto";
+
+service UserController{
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){}
+  rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){}
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse){}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse){}
+}

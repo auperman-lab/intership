@@ -39,7 +39,7 @@ func (repo *UserRepository) Delete(user *models.UserModel) error {
 
 }
 
-func (repo *UserRepository) CheckUserExists(userName string) (string, uint, error) {
+func (repo *UserRepository) CheckUserEmail(userName string) (string, uint, error) {
 	var user models.UserModel
 	result := repo.dbClient.Debug().Where("email= ?", userName).First(&user)
 
@@ -51,4 +51,18 @@ func (repo *UserRepository) CheckUserExists(userName string) (string, uint, erro
 	}
 
 	return user.Password, user.ID, nil
+}
+
+func (repo *UserRepository) CheckUserId(userID uint) (models.UserModel, error) {
+	var user models.UserModel
+	result := repo.dbClient.Debug().Where("id= ?", userID).First(&user)
+
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return user, nil
+		}
+		return user, result.Error
+	}
+
+	return user, nil
 }
