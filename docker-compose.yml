@@ -25,9 +25,24 @@ services:
     ports:
       - "6379:6379"
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./db-data/:/var/lib/rabbitmq/
+    networks:
+      - rabbitmq_go_net
+
 
 volumes:
   postgres-db:
     driver: local
   redis-db:
     driver: local
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge

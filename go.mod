@@ -5,7 +5,9 @@ go 1.21rc2
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/gorilla/websocket v1.5.0
 	github.com/redis/go-redis/v9 v9.1.0
+	github.com/streadway/amqp v1.1.0
 	golang.org/x/crypto v0.12.0
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0

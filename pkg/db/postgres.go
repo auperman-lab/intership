@@ -17,7 +17,7 @@ const (
 
 var DB *gorm.DB
 
-func Init() *gorm.DB {
+func InitPostgres() *gorm.DB {
 
 	fmt.Println("Connecting to database...")
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
