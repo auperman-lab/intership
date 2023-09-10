@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	httpServer()
+	grpcServer()
 }
 
 func wsServer() {
@@ -118,7 +118,6 @@ func grpcServer() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	//myServer := &grpc_transport.GrpcStruct{}
 	pb.RegisterUserControllerServer(s, userController)
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

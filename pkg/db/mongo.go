@@ -39,14 +39,11 @@ func InitMongo() {
 		log.Fatalf("Failed to unmarshal YAML: %v", err)
 	}
 
-	// Access configuration variables based on the environment
 	if config.Environment == "dev" {
 		mongodbConfig := config.MongoDB
-		// Use MongoDB configurations for the development environment
 		fmt.Printf("Connecting to MongoDB: %s:%d/%s\n", mongodbConfig.Host, mongodbConfig.Port, mongodbConfig.Database)
 	} else {
 		postgresqlConfig := config.PostgreSQL
-		// Use PostgreSQL configurations for production
 		fmt.Printf("Connecting to PostgreSQL: %s:%d/%s\n", postgresqlConfig.Host, postgresqlConfig.Port, postgresqlConfig.Database)
 	}
 }

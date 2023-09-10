@@ -22,7 +22,9 @@ message CreateUserRequest{
 }
 
 message CreateUserResponse{
-  User user = 1;
+  int64 status = 1;
+  string error = 2;
+
 }
 
 message LoginUserRequest{
@@ -31,9 +33,10 @@ message LoginUserRequest{
 }
 
 message LoginUserResponse{
-  User user = 1;
-  string acces_token=2;
-  string refresh_token=3;
+  int64 status = 1;
+  string error = 2;
+  string accesToken = 3;
+  string refreshToken = 4;
 }
 
 message DeleteUserRequest {
@@ -51,4 +54,16 @@ message GetUserResponse {
   User user = 1;
 }
 
+message ValidateUserRequest {
+  string accesToken = 1;
+  string refreshToken = 2;
+}
+
+message ValidateUserResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 userId = 3;
+  string accesToken = 4;
+  string refreshToken = 5;
+}
 

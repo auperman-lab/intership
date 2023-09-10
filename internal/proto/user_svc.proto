@@ -11,4 +11,6 @@ service UserController{
   rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){}
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse){}
   rpc GetUser(GetUserRequest) returns (GetUserResponse){}
+  rpc Validate(ValidateUserRequest) returns (ValidateUserResponse) {}
+
 }

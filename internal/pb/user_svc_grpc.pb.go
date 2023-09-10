@@ -26,6 +26,7 @@ type UserControllerClient interface {
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	Validate(ctx context.Context, in *ValidateUserRequest, opts ...grpc.CallOption) (*ValidateUserResponse, error)
 }
 
 type userControllerClient struct {
@@ -72,6 +73,15 @@ func (c *userControllerClient) GetUser(ctx context.Context, in *GetUserRequest, 
 	return out, nil
 }
 
+func (c *userControllerClient) Validate(ctx context.Context, in *ValidateUserRequest, opts ...grpc.CallOption) (*ValidateUserResponse, error) {
+	out := new(ValidateUserResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserController/Validate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserControllerServer is the server API for UserController service.
 // All implementations must embed UnimplementedUserControllerServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type UserControllerServer interface {
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	Validate(context.Context, *ValidateUserRequest) (*ValidateUserResponse, error)
 	mustEmbedUnimplementedUserControllerServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedUserControllerServer) DeleteUser(context.Context, *DeleteUser
 }
 func (UnimplementedUserControllerServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUserControllerServer) Validate(context.Context, *ValidateUserRequest) (*ValidateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (UnimplementedUserControllerServer) mustEmbedUnimplementedUserControllerServer() {}
 
@@ -184,6 +198,24 @@ func _UserController_GetUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserController_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserControllerServer).Validate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserController/Validate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserControllerServer).Validate(ctx, req.(*ValidateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserController_ServiceDesc is the grpc.ServiceDesc for UserController service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var UserController_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _UserController_GetUser_Handler,
+		},
+		{
+			MethodName: "Validate",
+			Handler:    _UserController_Validate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
