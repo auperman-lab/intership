@@ -12,7 +12,7 @@ type LoginRequestBody struct {
 	Password string `json:"password"`
 }
 
-func Login(ctx *gin.Context, c pb.UserControllerClient) {
+func Login(ctx *gin.Context, c pb.AuthServiceClient) {
 	b := LoginRequestBody{}
 
 	if err := ctx.BindJSON(&b); err != nil {
@@ -30,7 +30,6 @@ func Login(ctx *gin.Context, c pb.UserControllerClient) {
 		return
 	}
 
-	// Set cookies and return the response without sensitive tokens
 	refreshToken := res.RefreshToken
 	accessToken := res.AccesToken
 

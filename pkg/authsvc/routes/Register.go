@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"fmt"
 	"gateway/pkg/authsvc/pb"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -12,11 +13,12 @@ type RegisterRequestBody struct {
 	Password string `json:"password"`
 }
 
-func Create(ctx *gin.Context, c pb.UserControllerClient) {
+func Register(ctx *gin.Context, c pb.AuthServiceClient) {
 	b := RegisterRequestBody{}
 
 	if err := ctx.BindJSON(&b); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
+		fmt.Println(err)
 		return
 	}
 

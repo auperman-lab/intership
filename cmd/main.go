@@ -3,6 +3,7 @@ package main
 import (
 	"gateway/pkg/authsvc"
 	"gateway/pkg/config"
+	"gateway/pkg/usersvc"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -16,6 +17,7 @@ func main() {
 	r := gin.Default()
 
 	authsvc.RegisterRoutes(r, &c)
+	usersvc.RegisterRoutes(r, &c)
 
 	r.Run(":8080")
 

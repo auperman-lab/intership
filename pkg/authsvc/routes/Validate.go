@@ -1,4 +1,4 @@
-package authsvc
+package routes
 
 import (
 	"context"
@@ -7,25 +7,23 @@ import (
 	"net/http"
 )
 
-type AuthMiddlewareConfig struct {
-	svc *ServiceClient
-}
-
-func (c *AuthMiddlewareConfig) AuthRequired(ctx *gin.Context) {
+func Validate(ctx *gin.Context, c pb.AuthServiceClient) {
 	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
-
-	res, err := c.svc.Client.Validate(context.Background(), &pb.ValidateUserRequest{
+	res, err := c.Validate(context.Background(), &pb.ValidateUserRequest{
 		RefreshToken: refreshToken,
 	})
 
 	if err != nil || res.Status != http.StatusOK {
+		ctx.JSON(http.StatusInternalServerError, res)
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
+
 	ctx.SetCookie("acces_token", res.AccesToken, 60*5, "", "", false, true)
 	ctx.SetCookie("refresh_token", res.RefreshToken, 60*15, "", "", false, true)
 

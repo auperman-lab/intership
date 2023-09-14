@@ -8,20 +8,25 @@ import (
 
 func RegisterRoutes(r *gin.Engine, c *config.Config) *ServiceClient {
 	svc := &ServiceClient{
-		Client: InitUserControllerClient(c),
+		Client: InitAuthServiceClient(c),
 	}
 
 	routes := r.Group("/auth")
-	routes.POST("/register", svc.Create)
+	routes.POST("/register", svc.Register)
 	routes.POST("/login", svc.Login)
+	routes.POST("/validate", svc.Validate)
 
 	return svc
 }
 
-func (svc *ServiceClient) Create(ctx *gin.Context) {
-	routes.Create(ctx, svc.Client)
+func (svc *ServiceClient) Register(ctx *gin.Context) {
+	routes.Register(ctx, svc.Client)
 }
 
 func (svc *ServiceClient) Login(ctx *gin.Context) {
 	routes.Login(ctx, svc.Client)
+}
+
+func (svc *ServiceClient) Validate(ctx *gin.Context) {
+	routes.Validate(ctx, svc.Client)
 }

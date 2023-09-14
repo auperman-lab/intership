@@ -8,15 +8,15 @@ import (
 )
 
 type ServiceClient struct {
-	Client pb.UserControllerClient
+	Client pb.AuthServiceClient
 }
 
-func InitUserControllerClient(c *config.Config) pb.UserControllerClient {
+func InitAuthServiceClient(c *config.Config) pb.AuthServiceClient {
 	cc, err := grpc.Dial(c.AuthSvcUrl, grpc.WithInsecure())
 
 	if err != nil {
 		log.Fatal("Could not connect:", err)
 	}
 
-	return pb.NewUserControllerClient(cc)
+	return pb.NewAuthServiceClient(cc)
 }

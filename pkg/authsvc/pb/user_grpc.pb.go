@@ -19,169 +19,163 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserController_CreateUser_FullMethodName = "/pb.UserController/CreateUser"
-	UserController_LoginUser_FullMethodName  = "/pb.UserController/LoginUser"
-	UserController_Validate_FullMethodName   = "/pb.UserController/Validate"
+	AuthService_CreateUser_FullMethodName = "/pb.AuthService/CreateUser"
+	AuthService_LoginUser_FullMethodName  = "/pb.AuthService/LoginUser"
+	AuthService_Validate_FullMethodName   = "/pb.AuthService/Validate"
 )
 
-// UserControllerClient is the client API for UserController service.
+// AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserControllerClient interface {
-	// HTTP annotations for CreateUser
+type AuthServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// HTTP annotations for LoginUser
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
-	// HTTP annotations for Validate
 	Validate(ctx context.Context, in *ValidateUserRequest, opts ...grpc.CallOption) (*ValidateUserResponse, error)
 }
 
-type userControllerClient struct {
+type authServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserControllerClient(cc grpc.ClientConnInterface) UserControllerClient {
-	return &userControllerClient{cc}
+func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
+	return &authServiceClient{cc}
 }
 
-func (c *userControllerClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+func (c *authServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
 	out := new(CreateUserResponse)
-	err := c.cc.Invoke(ctx, UserController_CreateUser_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, AuthService_CreateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userControllerClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
+func (c *authServiceClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	out := new(LoginUserResponse)
-	err := c.cc.Invoke(ctx, UserController_LoginUser_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, AuthService_LoginUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userControllerClient) Validate(ctx context.Context, in *ValidateUserRequest, opts ...grpc.CallOption) (*ValidateUserResponse, error) {
+func (c *authServiceClient) Validate(ctx context.Context, in *ValidateUserRequest, opts ...grpc.CallOption) (*ValidateUserResponse, error) {
 	out := new(ValidateUserResponse)
-	err := c.cc.Invoke(ctx, UserController_Validate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, AuthService_Validate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserControllerServer is the server API for UserController service.
-// All implementations must embed UnimplementedUserControllerServer
+// AuthServiceServer is the server API for AuthService service.
+// All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
-type UserControllerServer interface {
-	// HTTP annotations for CreateUser
+type AuthServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// HTTP annotations for LoginUser
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
-	// HTTP annotations for Validate
 	Validate(context.Context, *ValidateUserRequest) (*ValidateUserResponse, error)
-	mustEmbedUnimplementedUserControllerServer()
+	mustEmbedUnimplementedAuthServiceServer()
 }
 
-// UnimplementedUserControllerServer must be embedded to have forward compatible implementations.
-type UnimplementedUserControllerServer struct {
+// UnimplementedAuthServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedAuthServiceServer struct {
 }
 
-func (UnimplementedUserControllerServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
+func (UnimplementedAuthServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserControllerServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
+func (UnimplementedAuthServiceServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
-func (UnimplementedUserControllerServer) Validate(context.Context, *ValidateUserRequest) (*ValidateUserResponse, error) {
+func (UnimplementedAuthServiceServer) Validate(context.Context, *ValidateUserRequest) (*ValidateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
-func (UnimplementedUserControllerServer) mustEmbedUnimplementedUserControllerServer() {}
+func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
-// UnsafeUserControllerServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserControllerServer will
+// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServiceServer will
 // result in compilation errors.
-type UnsafeUserControllerServer interface {
-	mustEmbedUnimplementedUserControllerServer()
+type UnsafeAuthServiceServer interface {
+	mustEmbedUnimplementedAuthServiceServer()
 }
 
-func RegisterUserControllerServer(s grpc.ServiceRegistrar, srv UserControllerServer) {
-	s.RegisterService(&UserController_ServiceDesc, srv)
+func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
+	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _UserController_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserControllerServer).CreateUser(ctx, in)
+		return srv.(AuthServiceServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserController_CreateUser_FullMethodName,
+		FullMethod: AuthService_CreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserControllerServer).CreateUser(ctx, req.(*CreateUserRequest))
+		return srv.(AuthServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserController_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserControllerServer).LoginUser(ctx, in)
+		return srv.(AuthServiceServer).LoginUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserController_LoginUser_FullMethodName,
+		FullMethod: AuthService_LoginUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserControllerServer).LoginUser(ctx, req.(*LoginUserRequest))
+		return srv.(AuthServiceServer).LoginUser(ctx, req.(*LoginUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserController_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ValidateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserControllerServer).Validate(ctx, in)
+		return srv.(AuthServiceServer).Validate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserController_Validate_FullMethodName,
+		FullMethod: AuthService_Validate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserControllerServer).Validate(ctx, req.(*ValidateUserRequest))
+		return srv.(AuthServiceServer).Validate(ctx, req.(*ValidateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UserController_ServiceDesc is the grpc.ServiceDesc for UserController service.
+// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UserController_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.UserController",
-	HandlerType: (*UserControllerServer)(nil),
+var AuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateUser",
-			Handler:    _UserController_CreateUser_Handler,
+			Handler:    _AuthService_CreateUser_Handler,
 		},
 		{
 			MethodName: "LoginUser",
-			Handler:    _UserController_LoginUser_Handler,
+			Handler:    _AuthService_LoginUser_Handler,
 		},
 		{
 			MethodName: "Validate",
-			Handler:    _UserController_Validate_Handler,
+			Handler:    _AuthService_Validate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

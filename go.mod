@@ -4,7 +4,6 @@ go 1.21.0
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.17.1
 	github.com/spf13/viper v1.16.0
 	google.golang.org/grpc v1.58.0
