@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres_db
+    image: postgres:alpine
+    restart:
+      always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: danu
+      POSTGRES_PASSWORD: macrii
+    volumes:
+      - ./db-data/postgres/:/var/lib/postgresql/data/  # PostgreSQL data volume
+
+  redis:
+    container_name: redis_db
+    image: redis:alpine
+    restart:
+      always
+    volumes:
+      - ./db-data/redis/:/var/lib/redis/data/  # Redis data volume
+    ports:
+      - "6379:6379"
+
+  mongodb:
+    container_name: mongo_db
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: danu
+      MONGO_INITDB_ROOT_PASSWORD: macrii
+    volumes:
+      - ./db-data/mongodb/:/data/db  # MongoDB data volume
+
+volumes:
+  postgres-db:
+    driver: local
+  redis-db:
+    driver: local
+  mongo-db:
+    driver: local

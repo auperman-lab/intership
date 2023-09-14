@@ -1,0 +1,18 @@
+
+api:
+  port: 3000
+  host: localhost
+
+environment: dev
+
+mongodb:
+  host: localhost
+  port: 27017
+  database: mongo_db
+
+postgresql:
+  host: production-host
+  port: 5432
+  database: postres_db
+  username: danu
+  password: macrii

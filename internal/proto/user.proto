@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package="./pb";
+
+service AuthService{
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){}
+  rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){}
+  rpc Validate(ValidateUserRequest) returns (ValidateUserResponse) {}
+
+}
+
+message CreateUserRequest{
+  string email = 1;
+  string password = 2;
+}
+
+message CreateUserResponse{
+  int64 status = 1;
+  string error = 2;
+
+}
+
+message LoginUserRequest{
+  string email = 1;
+  string password = 2;
+}
+
+message LoginUserResponse{
+  int64 status = 1;
+  string error = 2;
+  string accesToken = 3;
+  string refreshToken = 4;
+}
+
+message ValidateUserRequest {
+  string refreshToken = 2;
+}
+
+message ValidateUserResponse {
+  int64 status = 1;
+  string error = 2;
+  string accesToken = 4;
+  string refreshToken = 5;
+}
+
