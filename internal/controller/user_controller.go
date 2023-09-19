@@ -13,18 +13,18 @@ type IUserService interface {
 	Get(userID primitive.ObjectID) (models.UserModel, error)
 }
 
-type UserControllergrpc struct {
+type UserController struct {
 	pb.UnimplementedUserServiceServer
 	userService IUserService
 }
 
-func NewUserController(userService IUserService) *UserControllergrpc {
-	return &UserControllergrpc{
+func NewUserController(userService IUserService) *UserController {
+	return &UserController{
 		userService: userService,
 	}
 }
 
-func (ctrl *UserControllergrpc) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (ctrl *UserController) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	var user models.UserModel
 	user.ID, _ = primitive.ObjectIDFromHex(request.Id)
 
@@ -42,7 +42,7 @@ func (ctrl *UserControllergrpc) DeleteUser(ctx context.Context, request *pb.Dele
 	}, nil
 }
 
-func (ctrl *UserControllergrpc) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (ctrl *UserController) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	id, _ := primitive.ObjectIDFromHex(request.Id)
 
 	user, err := ctrl.userService.Get(id)

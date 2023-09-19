@@ -10,7 +10,6 @@ import (
 
 type UserRepository struct {
 	collection *mongo.Collection
-	sequence   *mongo.Collection
 }
 
 func NewUserRepository(client *mongo.Client, dbName, collectionName string) *UserRepository {

@@ -51,3 +51,23 @@ func init() {
 	}
 	db.InitMongo()
 }
+
+//func DeleteUsers(stream pb.UserService_DeleteUserClient) error {
+//	for {
+//		request, err := stream.Recv()
+//		if err != nil {
+//			log.Printf("Error receiving request: %v", err)
+//			return err
+//		}
+//
+//		response := &pb.DeleteUserResponse{
+//			Status: 200,
+//			Error:  "",
+//		}
+//
+//		if err := stream.Send(response); err != nil {
+//			log.Printf("Error sending response: %v", err)
+//			return err
+//		}
+//	}
+//}
