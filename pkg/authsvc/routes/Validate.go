@@ -24,7 +24,6 @@ func Validate(ctx *gin.Context, c pb.AuthServiceClient) {
 		return
 	}
 
-	ctx.SetCookie("acces_token", res.AccesToken, 60*5, "", "", false, true)
 	ctx.SetCookie("refresh_token", res.RefreshToken, 60*15, "", "", false, true)
 
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gateway/pkg/adminsvc"
 	"gateway/pkg/authsvc"
 	"gateway/pkg/config"
 	"gateway/pkg/usersvc"
@@ -18,6 +19,7 @@ func main() {
 
 	authsvc.RegisterRoutes(r, &c)
 	usersvc.RegisterRoutes(r, &c)
+	adminsvc.RegisterRoutes(r, &c)
 
 	r.Run(":8080")
 

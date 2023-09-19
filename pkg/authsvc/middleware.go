@@ -1,32 +1,36 @@
 package authsvc
 
 import (
-	"context"
-	"gateway/pkg/authsvc/pb"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 type AuthMiddlewareConfig struct {
 	svc *ServiceClient
 }
 
-func (c *AuthMiddlewareConfig) AuthRequired(ctx *gin.Context) {
-	refreshToken, err := ctx.Cookie("refresh_token")
-	if err != nil {
+func (c *AuthMiddlewareConfig) VerifyAccessToken(ctx *gin.Context) {
+	authorization := ctx.Request.Header.Get("authorization")
+
+	if authorization == "" {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	res, err := c.svc.Client.Validate(context.Background(), &pb.ValidateUserRequest{
-		RefreshToken: refreshToken,
-	})
+	token := strings.Split(authorization, "Bearer ")
+
+	if len(token) < 2 {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 
 	if err != nil || res.Status != http.StatusOK {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
-	ctx.SetCookie("acces_token", res.AccesToken, 60*5, "", "", false, true)
-	ctx.SetCookie("refresh_token", res.RefreshToken, 60*15, "", "", false, true)
 
+	ctx.Set("userId", res.UserId)
+
+	ctx.Next()
 }

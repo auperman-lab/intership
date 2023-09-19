@@ -31,12 +31,9 @@ func Login(ctx *gin.Context, c pb.AuthServiceClient) {
 	}
 
 	refreshToken := res.RefreshToken
-	accessToken := res.AccesToken
 
-	ctx.SetCookie("acces_token", accessToken, 60*5, "", "", false, true)
 	ctx.SetCookie("refresh_token", refreshToken, 60*15, "", "", false, true)
 	res.RefreshToken = ""
-	res.AccesToken = ""
 
 	ctx.JSON(http.StatusCreated, res)
 }
