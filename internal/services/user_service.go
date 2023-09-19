@@ -23,11 +23,13 @@ func NewUserService(userRepo IUserRepository) *UserService {
 }
 
 func (svc *UserService) Register(user *models.UserModel) error {
+
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
 		fmt.Println("Error hashing password")
 		return err
 	}
+	user.Role = []string{"user", "haha"}
 	user.Password = hashedPassword
 
 	return svc.userRepo.Insert(user)

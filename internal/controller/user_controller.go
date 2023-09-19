@@ -3,7 +3,9 @@ package controller
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"intership/internal/models"
 	"intership/internal/pb"
@@ -43,7 +45,7 @@ func (ctrl *UserController) CreateUser(ctx context.Context, request *pb.CreateUs
 	if err != nil {
 		response := &pb.CreateUserResponse{
 			Status: http.StatusInternalServerError,
-			Error:  "Error creating user",
+			Error:  "Error creating user" + err.Error(),
 		}
 
 		return response, status.Errorf(codes.Internal, "Error creating user: %v", err)
@@ -70,8 +72,7 @@ func (ctrl *UserController) LoginUser(ctx context.Context, request *pb.LoginUser
 
 		response := &pb.LoginUserResponse{
 			Status:       http.StatusUnauthorized,
-			Error:        "invalit credentials",
-			AccesToken:   "",
+			Error:        "invalit credentials" + err.Error(),
 			RefreshToken: "",
 		}
 
@@ -82,8 +83,7 @@ func (ctrl *UserController) LoginUser(ctx context.Context, request *pb.LoginUser
 	if err != nil {
 		response := &pb.LoginUserResponse{
 			Status:       http.StatusUnauthorized,
-			Error:        "cannot create tokens",
-			AccesToken:   accesTokenString,
+			Error:        "cannot create tokens" + err.Error(),
 			RefreshToken: refreshTokenString,
 		}
 
@@ -96,9 +96,11 @@ func (ctrl *UserController) LoginUser(ctx context.Context, request *pb.LoginUser
 	response := &pb.LoginUserResponse{
 		Status:       http.StatusOK,
 		Error:        "",
-		AccesToken:   accesTokenString,
 		RefreshToken: refreshTokenString,
 	}
+
+	md := metadata.Pairs("authorization", "Bearer "+accesTokenString)
+	grpc.SendHeader(ctx, md)
 
 	return response, nil
 }
@@ -112,7 +114,6 @@ func (ctrl *UserController) Validate(ctx context.Context, request *pb.ValidateUs
 		response := &pb.ValidateUserResponse{
 			Status:       http.StatusUnauthorized,
 			Error:        "cannot generate tokens",
-			AccesToken:   newAccesToken,
 			RefreshToken: newRefreshToken,
 		}
 		return response, err
@@ -120,9 +121,12 @@ func (ctrl *UserController) Validate(ctx context.Context, request *pb.ValidateUs
 	response := &pb.ValidateUserResponse{
 		Status:       http.StatusOK,
 		Error:        "",
-		AccesToken:   newAccesToken,
 		RefreshToken: newRefreshToken,
 	}
+
+	md := metadata.Pairs("authorization", "Bearer "+newAccesToken)
+	grpc.SendHeader(ctx, md)
+
 	return response, nil
 
 }

@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package pb;
 
-import "google/protobuf/timestamp.proto";
-
 option go_package="./pb";
 
 service AuthService{
@@ -32,7 +30,6 @@ message LoginUserRequest{
 message LoginUserResponse{
   int64 status = 1;
   string error = 2;
-  string accesToken = 3;
   string refreshToken = 4;
 }
 
@@ -43,7 +40,6 @@ message ValidateUserRequest {
 message ValidateUserResponse {
   int64 status = 1;
   string error = 2;
-  string accesToken = 4;
   string refreshToken = 5;
 }
 

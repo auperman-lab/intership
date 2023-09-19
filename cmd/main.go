@@ -6,7 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 	"intership/internal/controller"
-	"intership/internal/models"
 	"intership/internal/pb"
 	"intership/internal/repository"
 	"intership/internal/services"
@@ -47,15 +46,12 @@ func main() {
 
 func init() {
 	db.DB = db.InitPostgres()
-	err := db.DB.AutoMigrate(models.UserModel{})
-	if err != nil {
-		log.Fatalf("failed to migrate user model\n")
-	}
+	//err := db.DB.AutoMigrate(models.UserModel{})
+	//if err != nil {
+	//	log.Fatalf("failed to migrate user model\n")
+	//}
 
 	db.RDB, _ = db.InitRedis()
-	if err != nil {
-		log.Fatalf("failed to initialize Redis: %v\n", err)
-	}
 
 	db.InitMongo()
 
